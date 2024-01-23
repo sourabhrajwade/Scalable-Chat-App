@@ -1,4 +1,8 @@
 import { Server } from "socket.io";
+import { Redis } from "ioredis";
+
+// const pub = new Redis(7001, "172.25.0.4");
+// const sub = new Redis(7002, "172.25.0.4");
 
 
 class SocketService {
