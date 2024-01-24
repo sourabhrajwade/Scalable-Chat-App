@@ -27,7 +27,9 @@ coverage
 out/
 build
 dist
-.redis
+
+#redis
+.redis/
 
 # Debug
 npm-debug.log*
