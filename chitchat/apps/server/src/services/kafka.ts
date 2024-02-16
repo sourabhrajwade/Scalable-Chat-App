@@ -2,17 +2,17 @@ import {Kafka, Producer} from "kafkajs";
 import fs from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
-
+const prisma = new PrismaClient({ log: ['query', 'info'] })
 const kafka = new Kafka({
-    brokers: ["kafka-a3c73c0-sourabhrajwade23-73ed.a.aivencloud.com:22545"],
-    ssl: {
-        ca: [fs.readFileSync('./ca.pem', 'utf-8')]
-    },
-    sasl: {
-        username: 'avnadmin',
-        password: 'AVNS_u2qZxTCbBlwN3tAw9pN',
-        mechanism: "plain"
-    }
+    brokers: ["localhost:2181"],
+    // ssl: {
+    //     ca: [fs.readFileSync('./ca.pem', 'utf-8')]
+    // },
+    // sasl: {
+    //     username: 'avnadmin',
+    //     password: 'AVNS_u2qZxTCbBlwN3tAw9pN',
+    //     mechanism: "plain"
+    // }
 });
 
 let producer: null | Producer = null;
@@ -46,7 +46,7 @@ export async function startMessageConsumer() {
             if (!message.value) return;
             console.log('message rec on kafka consumer');
             try {
-                await PrismaClient.message.create({
+                await prisma.message.create({
                     data: {
                         text: message.value?.toString()
                     }
