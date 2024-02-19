@@ -4,15 +4,15 @@ import path from "path";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient({ log: ['query', 'info'] })
 const kafka = new Kafka({
-    brokers: ["localhost:2181"],
-    // ssl: {
-    //     ca: [fs.readFileSync('./ca.pem', 'utf-8')]
-    // },
-    // sasl: {
-    //     username: 'avnadmin',
-    //     password: 'AVNS_u2qZxTCbBlwN3tAw9pN',
-    //     mechanism: "plain"
-    // }
+    brokers: [""],
+    ssl: {
+        ca: [fs.readFileSync('./ca.pem', 'utf-8')]
+    },
+    sasl: {
+        username: '',
+        password: '',
+        mechanism: "plain"
+    }
 });
 
 let producer: null | Producer = null;
@@ -28,10 +28,12 @@ export async function createProducer() {
 
 export async function produceMessage(message:string) {
     const producer = await createProducer();
+    console.log("message in producer", )
     await producer.send({
-        messages: [{key: `message-${Date.now()}`, value: message}],
-        topic: "MESSAGES"
-    });
+        messages: [{ key: `message-${Date.now()}`, value: message }],
+        topic: "MESSAGES",
+      });
+    console.log("message in producer", message )
     return true;
 }
 

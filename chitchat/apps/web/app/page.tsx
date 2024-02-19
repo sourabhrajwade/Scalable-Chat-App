@@ -21,8 +21,8 @@ export default function Page() {
             className={classes["chat-button"]} > Send</button>
       </div>
       <div className="">
-        {messages.map((e, i) => (
-          <li>{i}{e}</li>
+        {messages.map((e) => (
+          <li>{e}</li>
         ))}
       </div>
     </div>

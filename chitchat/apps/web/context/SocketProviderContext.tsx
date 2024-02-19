@@ -5,7 +5,7 @@ import { io, Socket } from "socket.io-client";
 
 
 interface SocketProviderrProps {
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 interface ISocketContext {
