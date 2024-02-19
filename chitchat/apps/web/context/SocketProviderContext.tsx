@@ -5,7 +5,7 @@ import { io, Socket } from "socket.io-client";
 
 
 interface SocketProviderrProps {
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 interface ISocketContext {
@@ -36,11 +36,12 @@ export const SocketProvider: React.FC<SocketProviderrProps> = ({children}) => {
     const onMessageRec = useCallback((msg: string) => {
         console.log("Message recieved from redis", msg);
         const {message} = JSON.parse(msg) as {message: string}
-        setMessages(prev => [...prev, message])
+        setMessages((prev) => [...prev, message])
     },[])
     useEffect(() => {
         const _socket = io('http://localhost:8000');
-        _socket.on('message', onMessageRec)
+        _socket.on('message', onMessageRec);
+        
         setSocket(_socket);
         return () => {
             _socket.disconnect();

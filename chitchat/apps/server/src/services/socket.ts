@@ -1,19 +1,22 @@
 import { Server } from "socket.io";
 import { Redis } from "ioredis";
+import prismaClient from "./prisma";
+import {produceMessage, startMessageConsumer} from "./kafka"
 
 const pub = new Redis({
-    host: 'localhost',
+    host: "localhost",
     port: 6379,
     username: "default",
-    password: "password123"
-});
-const sub = new Redis({
-    host: 'localhost',
+    password: "password123",
+  });
+  
+  const sub = new Redis({
+    host: "localhost",
     port: 6379,
-    username: "default",
-    password: "password123"
-});
-
+    username: "",
+    password: "password123",
+  });
+  
 
 class SocketService {
     private _io_server: Server;
@@ -25,25 +28,27 @@ class SocketService {
                 origin: "*"
             }
         });
-        sub.subscribe("MESSAGES");
+       
     }
 
     public initEventListener() {
-        console.log("socket listerner is ready")
         const io = this.io;
+        console.log("socket listerner is ready")
         io.on("connect", (socket) => {
             console.log("New Socket connected", socket.id);
            
-            socket.on("event:message", async ({message}: {message: string} ) => {
+        io.on("event:message", async ({message}: {message: string} ) => {
                 console.log("New Message recieved ", message);
                 // publish on redis
-                await pub.publish("MESSAGES", JSON.stringify({message}))
+                await pub.publish("MESSAGES", JSON.stringify({ message }));
             });
         });
-
-        sub.on('message', (channel, message) => {
+       
+        sub.on('message', async (channel, message) => {
             if (channel === "MESSAGE") {
                 io.emit("message", message);
+               await produceMessage(message);
+               console.log("messages produced to Kafka broker")
             }
         })
     }
