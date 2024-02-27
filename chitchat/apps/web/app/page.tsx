@@ -1,31 +1,32 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { useSocket } from "../context/SocketProviderContext";
 import classes from "./page.module.css";
 
 export default function Page() {
-  const {sendMessage, messages} = useSocket();
-  const [message, setMessage] = useState('');
-  console.log("messages from ui", messages)
+  const { sendMessage, messages } = useSocket();
+  const [message, setMessage] = useState("");
+
   return (
     <div>
-      <h1>ChitChat</h1>
       <div>
-        <input 
-            className={classes["chat-input"]}
-            onChange={e => setMessage(e.target.value)}
-            placeholder="Message..."
-            />
-        <button 
-            onClick={e => sendMessage(message)}
-            className={classes["chat-button"]} > Send</button>
+        <input
+          onChange={(e) => setMessage(e.target.value)}
+          className={classes["chat-input"]}
+          placeholder="Message..."
+        />
+        <button
+          onClick={(e) => sendMessage(message)}
+          className={classes["button"]}
+        >
+          Send
+        </button>
       </div>
-      <div className="">
+      <div>
         {messages.map((e) => (
           <li>{e}</li>
         ))}
       </div>
     </div>
-
   )
 }
