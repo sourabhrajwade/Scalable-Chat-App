@@ -4,16 +4,16 @@ import path from "path";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient({ log: ['query', 'info'] })
 const kafka = new Kafka({
-    brokers: [""],
+    brokers: ["kafka-a3c73c0-sourabhrajwade23-73ed.a.aivencloud.com:22545"],
     ssl: {
-        ca: [fs.readFileSync('./ca.pem', 'utf-8')]
+      ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf-8")],
     },
     sasl: {
-        username: '',
-        password: '',
-        mechanism: "plain"
-    }
-});
+      username: "avnadmin",
+      password: process.env.KAFKA_PASSWORD,
+      mechanism: "plain",
+    },
+  });
 
 let producer: null | Producer = null;
 
